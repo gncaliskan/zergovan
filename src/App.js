@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import firebase from 'firebase';
+import ReduxThunk from 'redux-thunk';
 import reducers from './reducers';
 import { Header } from './components/common';
 import GirisYap from './components/GirisYap';
+
 
 
 class App extends Component {
@@ -21,8 +23,9 @@ class App extends Component {
   }
 
   render() {
+    const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
     return (
-      <Provider store={createStore(reducers)}>
+      <Provider store={store}>
         <View>
           <Header headerText="Giriş Yap" />
           <GirisYap />

@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Image, Text } from 'react-native';
-import firebase from 'firebase';
+import { Image, Text, View } from 'react-native';
 import { connect } from 'react-redux';
-import { kullaniciAdiDegisti, sifreDegisti } from '../actions';
+import { kullaniciAdiDegisti, sifreDegisti, girisYap, kayitOl } from '../actions';
 import { Button, Card, CardSection, Input, Spinner } from './common';
 
 class GirisYap extends Component {
@@ -15,45 +14,28 @@ class GirisYap extends Component {
     this.props.sifreDegisti(text);
   }
 
-
-  girisYap() {
+  girisYapBasildi() {
     const { email, password } = this.props;
-    firebase.auth().signInWithEmailAndPassword(email, password).catch(() => {
-      this.props.error = 'Giriş yapma başarısız.';
-    });
+    this.props.girisYap({ email, password });
   }
 
-  kayitOl() {
+  kayitOlBasildi() {
     const { email, password } = this.props;
-    firebase.auth().createUserWithEmailAndPassword(email, password).catch(() => {
-      this.props.error = 'Kayıt olma başarısız.';
-    });
+    this.props.kayitOl({ email, password });
   }
 
-
-  renderGirisButton() {
-      if (this.props.loading) {
-        return <Spinner size="small" />;
-      }
-
+  renderError() {
+    if (this.props.error) {
       return (
-        <Button onPress={this.girisYap.bind(this)}>
-          Giriş Yap
-        </Button>
+        <View style={{ backgroundColor: 'white' }}>
+            <Text style={styles.errorTextStyle}>
+              {this.props.error}
+            </Text>
+        </View>
       );
     }
+  }
 
-    renderKayitButton() {
-        if (this.props.loading) {
-          return <Spinner size="small" />;
-        }
-
-        return (
-          <Button onPress={this.kayitOl.bind(this)}>
-            Kayıt Ol
-          </Button>
-        );
-      }
   render() {
       return (
         <Card>
@@ -82,13 +64,14 @@ class GirisYap extends Component {
             />
           </CardSection>
 
-          <Text style={styles.errorTextStyle}>
-            {this.props.error}
-          </Text>
-
+          {this.renderError()}
           <CardSection>
-            {this.renderGirisButton()}
-            {this.renderKayitButton()}
+            <Button onPress={this.girisYapBasildi.bind(this)}>
+              Giriş Yap
+            </Button>
+            <Button onPress={this.kayitOlBasildi.bind(this)}>
+              Kayıt Ol
+            </Button>
           </CardSection>
         </Card>
       );
@@ -121,8 +104,10 @@ const styles = {
 const mapStateToProps = state => {
   return {
     email: state.auth.email,
-    password: state.auth.password
+    password: state.auth.password,
+    error: state.auth.error
   };
 };
 
-export default connect(mapStateToProps, { kullaniciAdiDegisti, sifreDegisti })(GirisYap);
+export default connect(mapStateToProps,
+  { kullaniciAdiDegisti, sifreDegisti, girisYap, kayitOl })(GirisYap);
