@@ -4,3 +4,5 @@ export const GIRIS_BASARILI = 'giris_basarili';
 export const KAYIT_BASARILI = 'kayit_basarili';
 export const GIRIS_HATASI = 'giris_hatasi';
 export const KAYIT_HATASI = 'kayit_hatasi';
+export const KULLANICI_GIRISI = 'kullanici_girisi';
+export const KULLANICI_KAYDI = 'kullanici_kaydi';

@@ -5,7 +5,9 @@ import {
   GIRIS_BASARILI,
   KAYIT_BASARILI,
   GIRIS_HATASI,
-  KAYIT_HATASI
+  KAYIT_HATASI,
+  KULLANICI_GIRISI,
+  KULLANICI_KAYDI
  } from './types';
 
 
@@ -25,11 +27,13 @@ export const sifreDegisti = (text) => {
 
 export const girisYap = ({ email, password }) => {
   return (dispatch) => {
+    dispatch({ type: KULLANICI_GIRISI });
     firebase.auth().signInWithEmailAndPassword(email, password)
     .then(user => {
       dispatch({ type: GIRIS_BASARILI, payload: user });
     })
-    .catch(() => {
+    .catch((error) => {
+      console.log(error);
       dispatch({ type: GIRIS_HATASI });
     });
   };
@@ -37,11 +41,13 @@ export const girisYap = ({ email, password }) => {
 
 export const kayitOl = ({ email, password }) => {
   return (dispatch) => {
+    dispatch({ type: KULLANICI_KAYDI });
     firebase.auth().createUserWithEmailAndPassword(email, password)
     .then(user => {
       dispatch({ type: KAYIT_BASARILI, payload: user });
     })
-    .catch(() => {
+    .catch((error) => {
+      console.log(error);
       dispatch({ type: KAYIT_HATASI });
     });
   };

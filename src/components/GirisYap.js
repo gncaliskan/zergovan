@@ -23,6 +23,27 @@ class GirisYap extends Component {
     const { email, password } = this.props;
     this.props.kayitOl({ email, password });
   }
+  renderGirisButton() {
+    if (this.props.loading) {
+      return <Spinner size="large" />
+    }
+    return (
+      <Button onPress={this.girisYapBasildi.bind(this)}>
+        Giriş Yap
+      </Button>
+    )
+  }
+
+  renderKayitButton() {
+    if (this.props.loading) {
+      return <Spinner size="large" />
+    }
+    return (
+      <Button onPress={this.kayitOlBasildi.bind(this)}>
+        Kayıt Ol
+      </Button>
+    )
+  }
 
   renderError() {
     if (this.props.error) {
@@ -66,12 +87,8 @@ class GirisYap extends Component {
 
           {this.renderError()}
           <CardSection>
-            <Button onPress={this.girisYapBasildi.bind(this)}>
-              Giriş Yap
-            </Button>
-            <Button onPress={this.kayitOlBasildi.bind(this)}>
-              Kayıt Ol
-            </Button>
+              {this.renderGirisButton()}
+              {this.renderKayitButton()}
           </CardSection>
         </Card>
       );
@@ -101,12 +118,9 @@ const styles = {
 };
 
 
-const mapStateToProps = state => {
-  return {
-    email: state.auth.email,
-    password: state.auth.password,
-    error: state.auth.error
-  };
+const mapStateToProps = ({ auth }) => {
+  const { email, password, error, loading } = auth;
+  return { email, password, error, loading };
 };
 
 export default connect(mapStateToProps,
