@@ -51,4 +51,4 @@ export const kayitOl = ({ email, password }) => {
       dispatch({ type: KAYIT_HATASI });
     });
   };
-}
+};

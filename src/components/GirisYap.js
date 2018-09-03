@@ -1,10 +1,23 @@
 import React, { Component } from 'react';
-import { Image, Text, View } from 'react-native';
+import { Image, Text, View, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import { kullaniciAdiDegisti, sifreDegisti, girisYap, kayitOl } from '../actions';
 import { Button, Card, CardSection, Input, Spinner } from './common';
+import { STATUS_BAR_HEIGHT } from '../constants'
 
 class GirisYap extends Component {
+  static navigationOptions = () => ({
+    title: 'Giriş Yap',
+    headerStyle: {
+      height: Platform.OS === 'android' ? 54 + STATUS_BAR_HEIGHT : 54,
+      backgroundColor: '#2196F3'
+    },
+    headerTitleStyle: {
+      marginTop: Platform.OS === 'android' ? STATUS_BAR_HEIGHT : 0,
+      color: 'white'
+    },
+    headerLeft: <View />
+  })
 
   kullaniciAdiDegistir(text) {
     this.props.kullaniciAdiDegisti(text);
