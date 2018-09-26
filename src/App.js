@@ -6,6 +6,8 @@ import firebase from 'firebase';
 import ReduxThunk from 'redux-thunk';
 import reducers from './reducers';
 import GirisYap from './components/GirisYap';
+import StoryList from './components/StoryList';
+import Register from './components/Register';
 
 
 class App extends Component {
@@ -16,13 +18,15 @@ class App extends Component {
       databaseURL: 'https://zergovan-f8885.firebaseio.com',
       projectId: 'zergovan-f8885',
       storageBucket: 'zergovan-f8885.appspot.com',
-      messagingSenderId: '101365403662'
+      messagingSenderId: '101365403662',
     });
   }
 
   render() {
     const MainNavigator = createStackNavigator({
-      Login: { screen: GirisYap }
+      Login: { screen: GirisYap },
+      Register: { screen: Register },
+      StoryList: { screen: StoryList }
     });
     const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
     return (

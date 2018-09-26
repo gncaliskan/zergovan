@@ -1,16 +1,29 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { connect } from 'react-redux';
+import { View } from 'react-native';
+import { getStories } from '../actions';
+import { SearchBar, CustomFlatList } from './common';
 
 class StoryList extends Component {
+
+  componentWillMount() {
+    this.props.getStories();
+  }
+
   render() {
     return (
       <View>
-        <Text>
-        Story
-        </Text>
+        <SearchBar placeholder='Arama Yapın' />
+        <CustomFlatList itemList={this.props.storyList} />
       </View>
     );
   }
 }
 
-export default StoryList;
+
+const mapStateToProps = ({ story }) => {
+  const { storyList } = story;
+  return { storyList };
+};
+
+export default connect(mapStateToProps, { getStories })(StoryList);

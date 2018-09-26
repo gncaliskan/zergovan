@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { Image, Text, View, Platform, AsyncStorage } from 'react-native';
+import { Image, Text, View, Platform } from 'react-native';
 import { connect } from 'react-redux';
-import { kullaniciAdiDegisti, sifreDegisti, girisYap } from '../actions';
+import { kullaniciAdiDegisti, sifreDegisti, sifre2Degisti, kayitOl } from '../actions';
 import { Button, Card, CardSection, Input, Spinner } from './common';
 
-import { STATUS_BAR_HEIGHT } from '../constants';
+import { STATUS_BAR_HEIGHT } from '../constants'
 
-class GirisYap extends Component {
+class Register extends Component {
   static navigationOptions = () => ({
-    title: 'Giriş Yap',
+    title: 'Kayıt Ol',
     headerStyle: {
       height: Platform.OS === 'android' ? 54 + STATUS_BAR_HEIGHT : 54,
       backgroundColor: '#2196F3'
@@ -18,24 +18,7 @@ class GirisYap extends Component {
       color: 'white'
     },
     headerLeft: <View />
-});
-
-  componentWillMount() {
-    AsyncStorage.getItem('id_token').then((token) => {
-      console.log(token);
-      if (token != null) {
-        this.props.navigation.navigate('StoryList');
-      }
-    });
-  }
-
-  async saveItem(item, selectedValue) {
-    try {
-      await AsyncStorage.setItem(item, selectedValue);
-    } catch (error) {
-      console.error(`AsyncStorage error: ${error.message}`);
-    }
-  }
+  })
 
   kullaniciAdiDegistir(text) {
     this.props.kullaniciAdiDegisti(text);
@@ -45,24 +28,17 @@ class GirisYap extends Component {
     this.props.sifreDegisti(text);
   }
 
-  girisYapBasildi() {
-    const { email, password } = this.props;
-    this.props.girisYap({ email, password });
-    if (this.props.authenticated) {
-      this.saveItem('id_token', this.props.user.user.uid);
-      this.props.navigation.navigate('StoryList');
-    }
+  sifre2Degistir(text) {
+    this.props.sifre2Degisti(text);
   }
 
-  renderGirisButton() {
-    if (this.props.loading) {
-      return <Spinner size="large" />;
+
+  kayitOlBasildi() {
+    const { email, password, password2 } = this.props;
+    this.props.kayitOl({ email, password, password2 });
+    if (this.props.authenticated) {
+      this.props.navigation.navigate('StoryList');
     }
-    return (
-      <Button onPress={this.girisYapBasildi.bind(this)}>
-        Giriş Yap
-      </Button>
-    );
   }
 
   renderKayitButton() {
@@ -70,10 +46,10 @@ class GirisYap extends Component {
       return <Spinner size="large" />;
     }
     return (
-      <Button onPress={() => this.props.navigation.navigate('Register')}>
+       <Button onPress={this.kayitOlBasildi.bind(this)}>
         Kayıt Ol
       </Button>
-    );
+    )
   }
 
   renderError() {
@@ -116,9 +92,18 @@ class GirisYap extends Component {
             />
           </CardSection>
 
+          <CardSection>
+            <Input
+              secureTextEntry
+              placeholder="Şifre Tekrar"
+              autoCapitalize="none"
+              value={this.props.password2}
+              onChangeText={this.sifre2Degistir.bind(this)}
+            />
+          </CardSection>
+
           {this.renderError()}
           <CardSection>
-              {this.renderGirisButton()}
               {this.renderKayitButton()}
           </CardSection>
         </Card>
@@ -150,9 +135,9 @@ const styles = {
 
 
 const mapStateToProps = ({ auth }) => {
-  const { email, password, error, loading, authenticated, user } = auth;
-  return { email, password, error, loading, authenticated, user };
+  const { email, password, password2, error, loading, authenticated } = auth;
+  return { email, password, password2, error, loading, authenticated };
 };
 
 export default connect(mapStateToProps,
-  { kullaniciAdiDegisti, sifreDegisti, girisYap })(GirisYap);
+  { kullaniciAdiDegisti, sifreDegisti, sifre2Degisti, kayitOl })(Register);
